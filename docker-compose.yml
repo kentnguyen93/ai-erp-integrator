@@ -6,7 +6,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/erp_integrator
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/erp_integrator
       - REDIS_URL=redis://redis:6379
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - TEMPORAL_HOST=temporal:7233
@@ -21,8 +21,8 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
       - POSTGRES_DB=erp_integrator
     ports:
       - "5432:5432"
@@ -59,8 +59,8 @@ services:
     environment:
       - DB=postgresql
       - DB_PORT=5432
-      - POSTGRES_USER=postgres
-      - POSTGRES_PWD=postgres
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PWD=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
       - POSTGRES_SEEDS=postgres
 
 volumes:
